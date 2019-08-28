@@ -11,6 +11,7 @@ attr_reader :id
     @grade = grade 
   end
 
+
   def self.create_table
     sql =  <<-SQL
       CREATE TABLE IF NOT EXISTS students (
@@ -21,12 +22,19 @@ attr_reader :id
         SQL
     DB[:conn].execute(sql)
   end
+
   
   def self.drop_table
     sql = "DROP TABLE IF EXISTS students"
 
     DB[:conn].execute(sql)
   end
+  
+  def update
+    sql = "UPDATE songs SET name = ?, grade = ? WHERE id = ?"
+    DB[:conn].execute(sql, self.name, self.grade, self.id)
+  end
+
   
   def save
     if self.id
@@ -40,5 +48,6 @@ attr_reader :id
       @id = DB[:conn].execute("SELECT last_insert_rowid() FROM students")[0][0]
     end
   end
+
 
 end
